@@ -2,8 +2,8 @@
   <section class="nomads-showcase-section">
     <div class="showcase-header">
       <div class="header-left">
-        <h2 class="showcase-title">物理题目解析与公式原理专家实战模板库</h2>
-        <p class="showcase-subtitle">精选典型场景与实战模版，点击“一键套用”快速体验</p>
+        <h2 class="showcase-title">实战案例与模板库 (Nomads Showcase)</h2>
+        <p class="showcase-subtitle">精选高频实战场景，点击“一键套用”快速生成高质量结果</p>
       </div>
       <span class="showcase-badge">已收录 {{ showcaseItems.length }} 个实战模板</span>
     </div>
@@ -16,7 +16,7 @@
       >
         <div class="card-header">
           <span class="scenario-tag">{{ item.tag }}</span>
-          <span class="usage-count">{{ item.usageCount }} 次生成</span>
+          <span class="usage-count">{{ item.usageCount }} 次应用</span>
         </div>
 
         <div class="card-content">
@@ -41,8 +41,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+const props = defineProps<{
+  appTitle?: string;
+  isImage?: boolean;
+}>();
+
 const emit = defineEmits<{
-  (e: 'apply-template', payload: { prompt: string }): void;
+  (e: 'apply-template', payload: { prompt: string; style?: string }): void;
 }>();
 
 export interface ShowcaseItem {
@@ -50,57 +55,105 @@ export interface ShowcaseItem {
   tag: string;
   title: string;
   prompt: string;
+  style?: string;
   usageCount: string;
 }
 
-const showcaseItems = computed<ShowcaseItem[]>(() => [
-  {
-    id: 'ai-wuli-1',
-    tag: '复合场偏转',
-    title: '带电粒子在复合场中运动轨迹与临界',
-    prompt: '详细推导带电粒子在交穿电场磁场中的运动方程，分析刚好不飞出边界的临界条件。',
-    usageCount: '56.8k'
-  },
-  {
-    id: 'ai-wuli-2',
-    tag: '传送带模型',
-    title: '倾斜传送带物体相对滑动与摩擦力突变',
-    prompt: '分析物块在倾斜传送带上的运动全过程，讨论当物块速度等于传送带速度时的受力突变。',
-    usageCount: '51.2k'
-  },
-  {
-    id: 'ai-wuli-3',
-    tag: '板块碰撞',
-    title: '滑块木板模型动量守恒与能量损失',
-    prompt: '求解滑块在木板上滑动最终达到共速的解题 SOP，计算相对位移与系统产生的焦耳热。',
-    usageCount: '45.6k'
-  },
-  {
-    id: 'ai-wuli-4',
-    tag: '电磁感应',
-    title: '双导体棒切割磁感线电量与速度变化',
-    prompt: '分析磁场中平行导轨双棒运动，运用动量定理推导通过回路的总电量与最终稳定速度。',
-    usageCount: '39.8k'
-  },
-  {
-    id: 'ai-wuli-5',
-    tag: '热力学',
-    title: '理想气体状态变化 P-V 图线与做功计算',
-    prompt: '讲解热力学第一定律，分析理想气体等温、等压及绝热过程中做功与吸收热量关系。',
-    usageCount: '34.2k'
-  },
-  {
-    id: 'ai-wuli-6',
-    tag: '竞赛微积分',
-    title: '用微积分求解变力做功与非均匀磁场',
-    prompt: '针对物理竞赛题目，示范如何建立微元积分方程求解变力做功与非均匀安培力。',
-    usageCount: '29.7k'
+// 模拟实战案例数据库（支持根据文本/图像类及应用主题切换）
+const showcaseItems = computed<ShowcaseItem[]>(() => {
+  if (props.isImage) {
+    return [
+      {
+        id: 'img-1',
+        tag: '写真肖像',
+        title: '商务精英形象照',
+        prompt: '高端写字楼背景，身穿深蓝色西装，眼神自信专注，赛博朋克光影效果',
+        style: '<photography>',
+        usageCount: '18.5k'
+      },
+      {
+        id: 'img-2',
+        tag: '概念插画',
+        title: '未来科幻城市海报',
+        prompt: '霓虹灯光的赛博朋克立体城市，飞行汽车，高品质概念插画，8k分辨率',
+        style: '<illustration>',
+        usageCount: '24.1k'
+      },
+      {
+        id: 'img-3',
+        tag: '二次元动漫',
+        title: '日系国潮动漫角色',
+        prompt: '穿着现代汉服的国风少年，手持纸伞，水彩漫感，唯美光感与柔光滤镜',
+        style: '<anime>',
+        usageCount: '15.9k'
+      },
+      {
+        id: 'img-4',
+        tag: '水彩艺术',
+        title: '治愈系自然风景画',
+        prompt: '晨雾中的森林湖泊，阳光穿透树林，水彩渐变质感，温馨治愈风格',
+        style: '<watercolor>',
+        usageCount: '12.3k'
+      }
+    ];
+  } else {
+    return [
+      {
+        id: 'text-1',
+        tag: '职场总结',
+        title: '周报 OKR 成果提炼',
+        prompt: '本周完成了核心模块优化与线上异常排查，请帮我梳理为具备量化指标的 OKR 汇报文案',
+        style: '专业干练，结果导向',
+        usageCount: '32.8k'
+      },
+      {
+        id: 'text-2',
+        tag: '高情商沟通',
+        title: '拒绝不合理加班话术',
+        prompt: '领导在周末突然布置非紧急任务，如何高情商、委婉且有理有据地推迟到工作日处理？',
+        style: '高情商，委婉，有情调',
+        usageCount: '28.4k'
+      },
+      {
+        id: 'text-3',
+        tag: '短视频文案',
+        title: '知识干货吸睛开头',
+        prompt: '准备制作一条关于高效学习法的短视频，设计 3 个能在前 3 秒留住用户的爆款口播开头',
+        style: '专业干练，结果导向',
+        usageCount: '45.1k'
+      },
+      {
+        id: 'text-4',
+        tag: '商务公文',
+        title: '跨部门协同申请函',
+        prompt: '因项目上线需要研发部门配合联调，撰写一份正式、严谨且明确时间节点的协同申请书',
+        style: '专业干练，结果导向',
+        usageCount: '19.7k'
+      },
+      {
+        id: 'text-5',
+        tag: '小红书种草',
+        title: '实战干货笔记排版',
+        prompt: '分享 5 个提升日常工作效率的文字工具，语言亲切，搭配吸引人的标题与 Emoji 排版',
+        style: '高情商，委婉，有情调',
+        usageCount: '36.2k'
+      },
+      {
+        id: 'text-6',
+        tag: '学术润色',
+        title: '论文摘要与结论重构',
+        prompt: '将以下粗糙的研究结论重写为学术规范、逻辑严密且无语法语病的论文摘要总结',
+        style: '专业干练，结果导向',
+        usageCount: '22.0k'
+      }
+    ];
   }
-]);
+});
 
 function applyTemplate(item: ShowcaseItem) {
   emit('apply-template', {
-    prompt: item.prompt
+    prompt: item.prompt,
+    style: item.style
   });
 }
 </script>
